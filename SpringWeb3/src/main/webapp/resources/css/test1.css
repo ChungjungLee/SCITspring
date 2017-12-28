@@ -1,0 +1,81 @@
+@CHARSET "UTF-8";
+
+/* 모든 태그 선택자 */
+* {
+	
+}
+
+/* 전체 화면의 패딩 없애기 */
+body {
+	top: 0px;
+	left: 0px;
+}
+
+h1 {
+	color: aqua;
+	font-size: 13px;
+}
+
+p {
+	color: lime;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+}
+
+table {
+	width: 300px;
+	margin: 0 auto;
+}
+
+/* table 아래있는 모든 tr */
+table tr {
+	
+}
+
+table td {
+	padding: 5px 5px 5px 5px;
+	border-top: 5px solid black;
+}
+
+a {
+	/* 링크 장식 없앰 */
+	text-decoration: none;
+	color: red;
+}
+
+/* class selector */
+.link {
+	color: fuchsia;
+}
+
+/* :hover 마우스 오버된 경우 */
+a.link:HOVER {
+	color: green;
+	font-size: 20px;
+}
+
+/* 특정 속성값을 가지는 태그를 선택하는 선택자 */
+a[href='#'] {
+	color: purple;
+	font-weight: bold;
+	border: 1px solid black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

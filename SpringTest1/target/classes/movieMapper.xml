@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 회원 처리 SQL -->
+<mapper namespace="global.sesoc.test1.dao.MovieMapper">
+	
+	<!-- 영화 정보 입력 -->
+	<insert id="insertMovie" parameterType="movie">
+		INSERT INTO springtest1movie
+			(movienum, title, director, stars)
+		VALUES
+			(springtest1movie_seq.nextval, #{title}, #{director}, #{stars})
+	</insert>
+	
+	<!-- 모든 영화 정보 출력 -->
+	<select id="selectMovies" resultType="movie">
+		SELECT
+			*
+		FROM
+			springtest1movie
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 회원정보 처리 SQL -->
+<mapper namespace="global.sesoc.web7.dao.MemberMapper">
+
+	<!-- 회원 정보 저장 -->
+	<insert id="insert" parameterType="Member">
+		INSERT INTO web7_member
+			(id, password, name)
+		VALUES
+			(#{id}, #{password}, #{name}) 
+	</insert>
+	
+	<select id="selectOne" parameterType="String" resultType="Member">
+		SELECT 
+			*
+		FROM
+			web7_member
+		WHERE
+			id = #{value}
+	</select>
+	
+	<select id="selectList" resultType="Member">
+		SELECT
+			*
+		FROM
+			web7_member
+	</select>
+	
+	<delete id="deleteOne" parameterType="String">
+		DELETE FROM
+			web7_member
+		WHERE
+			id = #{value}
+	</delete>
+	
+	<update id="update" parameterType="Member">
+			UPDATE
+				web7_member
+			SET
+				password = #{password},
+				name = #{name}
+			WHERE
+				id = #{id}
+	</update>
+</mapper>
