@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 회원정보 처리 SQL -->
+<mapper namespace="global.sesoc.guestbook.dao.GuestBookMapper">
+	
+	<!-- 방명록 글 저장 -->
+	<insert id="write" parameterType="GuestBook">
+		INSERT INTO guestbook
+			(num, author, content, password)
+		VALUES
+			(guestbook_seq.nextval,
+			#{author},
+			#{content},
+			#{password})
+	</insert>
+	
+	<!-- 방명록 글 모두 읽기 -->
+	<select id="readAll" resultType="GuestBook">
+		SELECT
+			*
+		FROM
+			guestbook
+		ORDER BY
+			indate DESC
+	</select>
+	
+	<!-- 방명록 글 하나 삭제하기 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM
+			guestbook
+		WHERE
+			id = #{value}
+	</delete>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
