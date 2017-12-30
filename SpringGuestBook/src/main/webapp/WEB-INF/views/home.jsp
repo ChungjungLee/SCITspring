@@ -13,6 +13,9 @@
 			<li>
 				<a href="guestbook">방명록 확인</a>
 			</li>
+			<li>
+				hotfix2를 위한 테스트
+			</li>
 		</ul>
 	</body>
 </html>
