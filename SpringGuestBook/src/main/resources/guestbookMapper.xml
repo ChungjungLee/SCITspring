@@ -17,6 +17,16 @@
 			#{password})
 	</insert>
 	
+	<!-- 방명록 글 하나 읽기 -->
+	<select id="readOne" resultType="GuestBook" parameterType="int">
+		SELECT
+			*
+		FROM
+			guestbook
+		WHERE
+			num = #{value}
+	</select>
+	
 	<!-- 방명록 글 모두 읽기 -->
 	<select id="readAll" resultType="GuestBook">
 		SELECT
@@ -32,8 +42,20 @@
 		DELETE FROM
 			guestbook
 		WHERE
-			id = #{value}
+			num = #{value}
 	</delete>
+	
+	<!-- 방명록 글 수정하기 -->
+	<update id="update" parameterType="GuestBook">
+		UPDATE
+			guestbook
+		SET
+			author = #{author},
+			content = #{content},
+			password = #{password}
+		WHERE
+			num = #{num}
+	</update>
 	
 </mapper>
 

@@ -19,13 +19,11 @@ public class GuestBookController {
 	@Autowired
 	SqlSession sqlSession;
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(GuestBookController.class);
 	
 	/* 방명록 글들 가져와서 보여주기 */
 	@RequestMapping (value = "/guestbook", method = RequestMethod.GET)
 	public String guestbook(Model model) {
-		logger.info("");
-		
 		GuestBookMapper mapper = sqlSession.getMapper(GuestBookMapper.class);
 		
 		ArrayList<GuestBook> list = null;
@@ -48,20 +46,41 @@ public class GuestBookController {
 	
 	/* 방명록 글 작성한 것 받아서 저장하기 */
 	@RequestMapping (value = "/guestbookwrite", method = RequestMethod.POST)
-	public String guestbookWrite(GuestBook guestbook) {
-		GuestBookMapper mapper = sqlSession.getMapper(GuestBookMapper.class);
+	public String guestbookWrite(GuestBook guestbook, String action) {
 		
-		int result = 0;
-		try {
-			result = mapper.write(guestbook);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (guestbook == null || action == null) {
+			return "errorPage";
 		}
 		
-		if (result == 0) {
-			return "redirect:/guestbookwirte";
+		GuestBookMapper mapper = sqlSession.getMapper(GuestBookMapper.class);
+		
+		if ("write".equals(action)) {
+			int result = 0;
+			try {
+				result = mapper.write(guestbook);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if (result == 0) {
+				return "redirect:/guestbookwirte";
+			} else {
+				return "redirect:/guestbook";
+			}
+			
 		} else {
-			return "redirect:/guestbook";
+			int result = 0;
+			try {
+				result = mapper.update(guestbook);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			if (result == 0) {
+				return "redirect:/guestbook";
+			} else {
+				return "redirect:/guestbook";
+			}
 		}
 	}
 	
@@ -69,18 +88,68 @@ public class GuestBookController {
 	/* 방명록 글 삭제하기 */
 	@RequestMapping (value = "/guestbookdelete", method = RequestMethod.POST)
 	public String guestbookDelete(String password, String clickednum) {
-		//logger.info("pw: {}, num: {}", password, clickednum);
-		System.out.println("delete delete " + password + ", " + clickednum);
-		return "redirect:/guestbook";
+		
+		if (password == null || clickednum == null) {
+			return "errorPage";
+		}
+		
+		GuestBookMapper mapper = sqlSession.getMapper(GuestBookMapper.class);
+		
+		GuestBook guestbook = null;
+		try {
+			guestbook = mapper.readOne(Integer.parseInt(clickednum));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (guestbook == null || !guestbook.getPassword().equals(password)) {
+			logger.info("PASSWORD WRONG!!!");
+			return "redirect:/guestbook";
+		}
+		
+		int result = 0;
+		try {
+			result = mapper.delete(Integer.parseInt(clickednum));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (result == 0) {
+			logger.info("Error occurred while DELETING!!!");
+			return "redirect:/guestbook";
+		} else {
+			return "redirect:/guestbook";
+		}
+		
 	}
 	
-	/* 방명록 글 수정하기 */
+	/* 방명록 글 수정 요청 처리하기 */
 	@RequestMapping (value = "/guestbookupdate", method = RequestMethod.POST)
-	public String guestbookUpdate(String password, String clickednum) {
-		//logger.info("pw: {}, num: {}", password, clickednum);
-		System.out.println("update update " + password +", " + clickednum);
-		return "redirect:/guestbook";
+	public String guestbookUpdate(String password, String clickednum, Model model) {
+		
+		if (password == null || clickednum == null) {
+			return "errorPage";
+		}
+		
+		GuestBookMapper mapper = sqlSession.getMapper(GuestBookMapper.class);
+		
+		GuestBook guestbook = null;
+		try {
+			guestbook = mapper.readOne(Integer.parseInt(clickednum));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (guestbook == null || !guestbook.getPassword().equals(password)) {
+			return "redirect:/guestbook";
+		} else {
+			model.addAttribute("guestbook", guestbook);
+			
+			return "guestbookForm";
+		}
+		
 	}
+	
 }
 
 

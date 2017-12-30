@@ -8,9 +8,11 @@ public interface GuestBookMapper {
 
 	int write(GuestBook guestbook);
 	
+	GuestBook readOne(int num);
+	
 	ArrayList<GuestBook> readAll();
 	
 	int delete(int num);
 	
-	int update();
+	int update(GuestBook guestbook);
 }
