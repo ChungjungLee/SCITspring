@@ -33,7 +33,7 @@
 				</c:forEach>
 			</table>
 			<input type="hidden" name="clickednum" id="clickednum">
-			<input type="hidden" name="password" id="password">
+			<input type="hidden" name="password" id="password" value="">
 		</form>
 		
 	</body>
