@@ -19,4 +19,48 @@
 			#{email}, #{division}, #{idno}, #{address}) 
 	</insert>
 	
+	<!-- 모든 회원 정보 -->
+	<select id="selectAll" resultType="Customer">
+		SELECT
+			*
+		FROM
+			customer8
+	</select>
+	
+	<!-- 한 명의 회원 정보 -->
+	<select id="selectOne" parameterType="String" resultType="Customer">
+		SELECT
+			*
+		FROM
+			customer8
+		WHERE
+			custid = #{value}
+	</select>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
