@@ -1,5 +1,8 @@
 package global.sesoc.web8.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +20,7 @@ import global.sesoc.web8.vo.Customer;
  * 즉, /customer/join 등과 같이 사용해야 한다
  * */
 @RequestMapping("customer")
-@SessionAttributes("customer")
+@SessionAttributes({"customer","loginid"})
 public class CustomerJoinController {
 	
 	/**
@@ -32,7 +35,7 @@ public class CustomerJoinController {
 	public String joinForm(Model model) {
 		model.addAttribute("customer", new Customer());
 		
-		return "customer/joinForm";
+		return "customerr/joinForm";
 	}
 	
 	@RequestMapping (value = "join", method = RequestMethod.POST)
@@ -54,7 +57,7 @@ public class CustomerJoinController {
 			// model.addAttribute("customer", customer);
 			
 			/* joinForm.jsp는 여기서도 사용되고 위에서도 사용이 되는데 그 두 경우를 어떻게 나눌것인가? */
-			return "customer/joinForm";
+			return "customerr/joinForm";
 		} 
 		
 		return "redirect:joinComplete";
@@ -73,7 +76,69 @@ public class CustomerJoinController {
 		model.addAttribute("id", customer.getCustid());
 		
 		
-		return "customer/joinComplete";
+		return "customerr/joinComplete";
+	}
+	
+	@RequestMapping (value = "idCheckPage", method = RequestMethod.GET)
+	public String idCheckForm() {
+		return "customerr/idCheckForm";
+	}
+	
+	@RequestMapping (value = "idCheckPage", method = RequestMethod.POST)
+	public String idCheck(String id, Model model) {
+		
+		// 먼저 중복확인 버튼을 눌렀다는 것을 표시
+		model.addAttribute("checked", true);
+		
+		// 입력 받은 아이디가 db에 있는지 확인
+		Customer customer = customerDAO.getCustomerOne(id);
+		
+		// 중복인지 아닌지 표시
+		if (customer == null) {
+			model.addAttribute("duplicated", false);
+		} else {
+			model.addAttribute("duplicated", true);
+		}
+		
+		return "customerr/idCheckForm";
+	}
+	
+	@RequestMapping (value = "login", method = RequestMethod.GET)
+	public String loginForm() {
+		return "loginForm";
+	}
+	
+	@RequestMapping (value = "login", method = RequestMethod.POST)
+	public String login(String id, String pw, Model model) {
+		
+		Customer customer = customerDAO.getCustomerOne(id);
+		
+		// 중복인지 아닌지 표시
+		if (customer == null) {
+			return "redirect:login";
+		} 
+		
+		if (!customer.getPassword().equals(pw)) {
+			return "redirect:login";
+		} else {
+			model.addAttribute("loginid", id);
+			return "redirect:login";
+		}
+	}
+	
+	@RequestMapping (value = "logout", method = RequestMethod.GET)
+	public String logout(SessionStatus status) {
+		
+		status.setComplete();
+		
+		return "redirect:login";
+	}
+	
+	@RequestMapping (value = "test", method = RequestMethod.GET)
+	public String test1(Model model, HttpServletRequest req, HttpServletResponse res) {
+		model.addAttribute("test", "testtest");
+		
+		return "redirect:login";
 	}
 }
 

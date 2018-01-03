@@ -1,5 +1,7 @@
 package global.sesoc.web8.dao;
 
+import java.util.ArrayList;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -27,6 +29,32 @@ public class CustomerDAO {
 			CustomerMapper mapper = sqlsession.getMapper(CustomerMapper.class);
 			result = mapper.insert(customer);
 			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public ArrayList<Customer> getCustomerAll() {
+		ArrayList<Customer> result = null;
+		
+		try {
+			CustomerMapper mapper = sqlsession.getMapper(CustomerMapper.class);
+			result = mapper.selectAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	public Customer getCustomerOne(String id) {
+		Customer result = null;
+		
+		try {
+			CustomerMapper mapper = sqlsession.getMapper(CustomerMapper.class);
+			result = mapper.selectOne(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

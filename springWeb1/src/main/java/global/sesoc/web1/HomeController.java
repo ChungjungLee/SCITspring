@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -41,12 +43,16 @@ public class HomeController {
 	
 	// requestmapping의 value 주소와 method 이름이 같을 필요는 없다
 	@RequestMapping(value = "/test1", method = RequestMethod.GET)
-	public void test1 (Model model) {
+	public void test1 (Model model, HttpServletRequest req) {
+		
+		logger.info("str2: {}", req.getParameter("str2"));
+		logger.info("num2: {}", req.getParameter("num2"));
+		
+		logger.info("reqstr2: {}", req.getParameter("reqstr2"));
+		logger.info("reqnum2: {}", req.getParameter("reqnum2"));
 		
 		// parameter에 request, response를 받질 않는데 어떻게 받아서 활용하는가?
 		// 스프링이 알아서 받아온다 by model
-		
-		logger.info("test1 왔다 감");
 		
 		// request.addAttribute()와 같음
 		model.addAttribute("str", "test1에서 넘겨줌");
@@ -61,9 +67,12 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/test2", method = RequestMethod.GET)
-	public String test2 (Model model) {
+	public String test2 (Model model, HttpServletRequest req) {
 		model.addAttribute("str2", "test2에서 넘겨줌");
 		model.addAttribute("num2", 200);
+		
+		req.setAttribute("reqstr2", "request로 test2에서 넘겨줌");
+		req.setAttribute("reqnum2", 2000);
 		
 		// redirect하려면 redirect:를 주소 앞에 써주면 된다
 		// redirect:[url]
@@ -125,6 +134,7 @@ public class HomeController {
 		return "test5Result";
 	}
 }
+
 
 
 
