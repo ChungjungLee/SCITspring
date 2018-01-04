@@ -35,7 +35,7 @@ public class CustomerJoinController {
 	public String joinForm(Model model) {
 		model.addAttribute("customer", new Customer());
 		
-		return "customerr/joinForm";
+		return "customerPage/joinForm";
 	}
 	
 	@RequestMapping (value = "join", method = RequestMethod.POST)
@@ -43,7 +43,6 @@ public class CustomerJoinController {
 			@ModelAttribute("customer") Customer customer, Model model) {
 		
 		// session에 customer key로 저장 되어있는 값을 parameter로부터 넘겨받은 값으로 업데이트 시켜준다 자동으로
-		
 		
 		// 이제까지는 sqlSession을 여기서 불렀는데 앞으로는 DAO에서 부르도록 하겠다
 		int result = customerDAO.insert(customer);
@@ -57,7 +56,7 @@ public class CustomerJoinController {
 			// model.addAttribute("customer", customer);
 			
 			/* joinForm.jsp는 여기서도 사용되고 위에서도 사용이 되는데 그 두 경우를 어떻게 나눌것인가? */
-			return "customerr/joinForm";
+			return "customerPage/joinForm";
 		} 
 		
 		return "redirect:joinComplete";
@@ -76,12 +75,12 @@ public class CustomerJoinController {
 		model.addAttribute("id", customer.getCustid());
 		
 		
-		return "customerr/joinComplete";
+		return "customerPage/joinComplete";
 	}
 	
 	@RequestMapping (value = "idCheckPage", method = RequestMethod.GET)
 	public String idCheckForm() {
-		return "customerr/idCheckForm";
+		return "customerPage/idCheckForm";
 	}
 	
 	@RequestMapping (value = "idCheckPage", method = RequestMethod.POST)
@@ -100,38 +99,7 @@ public class CustomerJoinController {
 			model.addAttribute("duplicated", true);
 		}
 		
-		return "customerr/idCheckForm";
-	}
-	
-	@RequestMapping (value = "login", method = RequestMethod.GET)
-	public String loginForm() {
-		return "loginForm";
-	}
-	
-	@RequestMapping (value = "login", method = RequestMethod.POST)
-	public String login(String id, String pw, Model model) {
-		
-		Customer customer = customerDAO.getCustomerOne(id);
-		
-		// 중복인지 아닌지 표시
-		if (customer == null) {
-			return "redirect:login";
-		} 
-		
-		if (!customer.getPassword().equals(pw)) {
-			return "redirect:login";
-		} else {
-			model.addAttribute("loginid", id);
-			return "redirect:login";
-		}
-	}
-	
-	@RequestMapping (value = "logout", method = RequestMethod.GET)
-	public String logout(SessionStatus status) {
-		
-		status.setComplete();
-		
-		return "redirect:login";
+		return "customerPage/idCheckForm";
 	}
 	
 	@RequestMapping (value = "test", method = RequestMethod.GET)

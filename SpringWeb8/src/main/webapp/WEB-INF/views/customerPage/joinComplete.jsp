@@ -11,6 +11,8 @@
 		
 		<h3>${id}님, 가입을 축하드립니다</h3>
 		
+		<h3>${customer.idno}</h3>
+		
 		<a href="#">로그인 하기</a>
 	</body>
 </html>

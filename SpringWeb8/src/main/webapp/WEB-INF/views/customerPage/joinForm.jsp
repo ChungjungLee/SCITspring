@@ -10,7 +10,8 @@
 	</head>
 	<body>
 		<c:if test="${errorMessage != null}">
-			<p>${errorMessage}</p>
+			<p>${errorMessage}</p> <br>
+			<p>${customer.idno}</p> <br>
 		</c:if>
 		
 		<!--
