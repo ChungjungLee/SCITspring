@@ -17,40 +17,40 @@
 				게시판 글 읽기
 			</div>
 			<div class="content">
-				<div>
+				<div class="col-header">
 					작성자
 				</div>
-				<div>
-					${board.id}
+				<div class="col-body">
+					<c:out value="${board.id}" />
 				</div>
-				<div>
+				<div class="col-header">
 					작성일
 				</div>
-				<div>
+				<div class="col-body">
 					${board.inputdate}
 				</div>
-				<div>
+				<div class="col-header">
 					조회수
 				</div>
-				<div>
+				<div class="col-body">
 					${board.hits}
 				</div>
-				<div>
+				<div class="col-header">
 					제목
 				</div>
-				<div>
-					${board.title}
+				<div class="col-body">
+					<c:out value="${board.title}" />
 				</div>
-				<div>
+				<div class="col-header">
 					내용
 				</div>
-				<div>
-					${board.content}
+				<div class="col-body">
+					<c:out value="${board.content}" />
 				</div>
-				<div>
+				<div class="col-header">
 					파일첨부
 				</div>
-				<div>
+				<div class="col-body">
 					sample file path
 				</div>
 			</div>
@@ -60,24 +60,25 @@
 				<a href="list">목록보기</a>
 			</div>
 			<div class="reply-input">
-				<form action="#" method="POST">
+				<form action="#" method="POST" onsubmit="return validation()">
 					리플내용 
-					<input type="text" name="reply"> 
+					<input type="text" id="reply" name="reply">
+					<input type="hidden" >
 					<input type="submit" value="확인">
 				</form>
 			</div>
 			<div class="reply-content">
 				<c:forEach var="reply" items="${replyList}">
-					<div>
+					<div class="col-header-reply">
 						<c:out value="${reply.id}" />
 					</div>
-					<div>
+					<div class="col-body-reply">
 						<c:out value="${reply.text}" />
 					</div>
-					<div>
+					<div class="reply-menu">
 						<a href="#">[수정]</a>
 					</div>
-					<div>
+					<div class="reply-menu">
 						<a href="#">[삭제]</a>
 					</div>
 				</c:forEach>

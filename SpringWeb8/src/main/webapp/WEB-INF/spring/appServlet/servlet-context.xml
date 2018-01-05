@@ -32,6 +32,7 @@
 			<!-- intercept를 걸어주고 싶은 주소 -->
 			<mvc:mapping path="/customer/update"/>
 			<mvc:mapping path="/board/**"/>
+			<mvc:mapping path="/reply/**"/>
 			
 			<beans:ref bean="loginInterceptor"/>
 		</mvc:interceptor>
