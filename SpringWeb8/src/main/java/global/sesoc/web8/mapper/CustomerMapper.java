@@ -10,4 +10,6 @@ public interface CustomerMapper {
 	ArrayList<Customer> selectAll();
 	
 	Customer selectOne(String custid);
+	
+	int update(Customer customer);
 }

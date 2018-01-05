@@ -61,6 +61,19 @@ public class CustomerDAO {
 		
 		return result;
 	}
+	
+	public int update(Customer customer) {
+		int result = 0;
+		
+		try {
+			CustomerMapper mapper = sqlsession.getMapper(CustomerMapper.class);
+			result = mapper.update(customer);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }
 
 

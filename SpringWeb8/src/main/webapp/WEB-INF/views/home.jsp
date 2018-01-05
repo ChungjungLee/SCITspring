@@ -26,6 +26,9 @@
 					<li>
 						<a href="customer/logout">로그아웃</a>
 					</li>
+					<li>
+						<a href="board/list">게시판으로</a>
+					</li>
 				</c:otherwise>
 			</c:choose>
 			

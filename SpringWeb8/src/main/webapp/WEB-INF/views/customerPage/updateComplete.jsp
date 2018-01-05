@@ -4,15 +4,13 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>[ 가입 환영 ]</title>
+		<title>[ 수정 완료 ]</title>
 	</head>
 	<body>
-		<h1>[ customer/joinComplete.jsp ]</h1>
+		<h1>[ customer/updateComplete.jsp ]</h1>
 		
-		<h3>${id}님, 가입을 축하드립니다</h3>
+		<h3>${sessionScope.loginid}님, 회원 정보 수정이 완료되었습니다</h3>
 		
-		<h3>${customer.idno}</h3>
-		
-		<a href="login">로그인 하기</a>
+		<a href="../">홈으로</a>
 	</body>
 </html>

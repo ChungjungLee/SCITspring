@@ -10,5 +10,6 @@
 	</typeAliases>
 	<mappers>
 		<mapper resource="customerMapper.xml" />
+		<mapper resource="boardMapper.xml" />
 	</mappers>
 </configuration>

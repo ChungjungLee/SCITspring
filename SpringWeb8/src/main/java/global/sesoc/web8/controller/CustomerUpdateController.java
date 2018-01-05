@@ -33,9 +33,13 @@ public class CustomerUpdateController {
 	@RequestMapping (value = "update", method = RequestMethod.POST)
 	public String update(Customer customer) {
 		
+		int result = customerDAO.update(customer);
 		
-		
-		return "";
+		if (result == 1) {
+			return "customerPage/updateComplete";
+		} else {
+			return "redirect:update";
+		}
 	}
 }
 

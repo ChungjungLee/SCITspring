@@ -36,6 +36,21 @@
 		WHERE
 			custid = #{value}
 	</select>
+	
+	<!-- 회원 정보 수정 -->
+	<update id="update" parameterType="Customer">
+		UPDATE
+			customer8
+		SET
+			password = #{password},
+			name = #{name},
+			email = #{email},
+			division = #{division},
+			idno = #{idno},
+			address = #{address}
+		WHERE
+			custid = #{custid}
+	</update>
 </mapper>
 
 

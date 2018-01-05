@@ -1,0 +1,96 @@
+@CHARSET "UTF-8";
+
+.section {
+	width: 80%;
+	background-color: aqua;
+	margin: auto;
+	padding: 10px;
+	display: table;
+	border-collapse: collapse;
+}
+
+.header {
+	width: 100%;
+	float: left;
+	clear: both;
+	text-align: center;
+}
+
+.expand {
+	width: 100%;
+	float: left;
+	clear: both;
+}
+
+.informations {
+	width: 80%;
+	float: left;
+	clear: left;
+}
+
+.write-button {
+	width: 20%;
+	float: left;
+	clear: right;
+}
+
+.board {
+	width: 100%;
+	float: left;
+	clear: both;
+}
+
+.board-row {
+	width: 100%;
+	float: left;
+	clear: inherit;
+	box-sizing: border-box;
+}
+
+.num {
+	float: left;
+	width: 10%;
+}
+
+.title {
+	float: left;
+	width: 40%;
+}
+
+.author {
+	float: left;
+	width: 20%
+}
+
+.hits {
+	float: left;
+	width: 10%;
+}
+
+.indate {
+	float: left;
+	width: 20%;
+}
+
+.navi {
+	width: 100%;
+	float: left;
+	clear: both;
+}
+
+.pagination {
+	text-align: center;
+}
+
+.searchbar {
+	text-align: center;
+}
+
+
+
+
+
+
+
+
+

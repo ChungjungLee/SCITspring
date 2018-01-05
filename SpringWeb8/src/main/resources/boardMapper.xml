@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.web8.mapper.BoardMapper">
+	
+	<!-- 모든 글 읽어오기 -->
+	<select id="readAll" resultType="Board">
+		SELECT
+			*
+		FROM
+			board8
+	</select>
+	
+	<!-- 글 하나 읽어오기 -->
+	<select id="readOne" parameterType="int" resultType="Board">
+		SELECT
+			*
+		FROM
+			board8
+		WHERE
+			boardnum = #{value}
+	</select>
+	
+	<!-- 글 쓰기 -->
+	<insert id="write" parameterType="Board">
+		INSERT INTO board8
+			(boardnum, id, title, content)
+		VALUES
+			(board8_seq.nextval, #{id}, #{title}, #{content})
+	</insert>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHits" parameterType="int">
+		UPDATE
+			board8
+		SET
+			hits = hits + 1
+		WHERE
+			boardnum = #{value}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
