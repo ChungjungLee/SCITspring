@@ -52,11 +52,11 @@
 						</div>
 						<div class="title">
 							<a href="read?boardnum=${board.boardnum}">
-								${board.title}
+								<c:out value="${board.title}" />
 							</a>
 						</div>
 						<div class="author">
-							${board.id}
+							<c:out value="${board.id}" />
 						</div>
 						<div class="hits">
 							${board.hits}

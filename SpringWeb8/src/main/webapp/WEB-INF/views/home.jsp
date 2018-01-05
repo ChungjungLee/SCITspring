@@ -19,7 +19,7 @@
 					</li>
 				</c:when>
 				<c:otherwise>
-					<p>${sessionScope.loginid}님 환영합니다</p>
+					<p><c:out value="${sessionScope.loginid}" />님 환영합니다</p>
 					<li>
 						<a href="customer/update">정보수정</a>
 					</li>

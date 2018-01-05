@@ -11,5 +11,6 @@
 	<mappers>
 		<mapper resource="customerMapper.xml" />
 		<mapper resource="boardMapper.xml" />
+		<mapper resource="replyMapper.xml" />
 	</mappers>
 </configuration>

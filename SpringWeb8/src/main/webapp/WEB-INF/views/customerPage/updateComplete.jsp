@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,7 +10,7 @@
 	<body>
 		<h1>[ customer/updateComplete.jsp ]</h1>
 		
-		<h3>${sessionScope.loginid}님, 회원 정보 수정이 완료되었습니다</h3>
+		<h3><c:out value="${sessionScope.loginid}" />님, 회원 정보 수정이 완료되었습니다</h3>
 		
 		<a href="../">홈으로</a>
 	</body>

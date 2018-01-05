@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import global.sesoc.web8.dao.BoardDAO;
+import global.sesoc.web8.dao.ReplyDAO;
 import global.sesoc.web8.vo.Board;
+import global.sesoc.web8.vo.Reply;
 
 @Controller
 @RequestMapping("board")
@@ -21,6 +23,8 @@ public class BoardController {
 	
 	@Autowired
 	BoardDAO boardDAO;
+	@Autowired
+	ReplyDAO replyDAO;
 	
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
@@ -84,29 +88,28 @@ public class BoardController {
 	 */
 	@RequestMapping (value = "read", method = RequestMethod.GET)
 	public String read(Integer boardnum, Model model) {
-		
-		logger.info("boardnum: {}", boardnum);
-		
-		// 1. 글 번호로 DAO를 통해 글 하나를 읽어 온다
+		// 글 번호로 DAO를 통해 글 하나를 읽어 온다
 		Board board = boardDAO.readOne(boardnum);
 		
 		if (board == null) {
-			// 2. 값이 없다면 게시판 목록으로 리다이렉트
 			return "redirect:list";
-		} else {
-			// 3. 조회수를 올려준다(올려준 다음에 읽어 오든지, 읽은 다음에 조회수를 증가시켜 보내든지)
-			if (boardDAO.updateHits(boardnum) == 1) {
-				// 4-1. 제대로 조회수 증가가 이루어지면 model에 넣어서 해당 view로 넘겨준다
-				board.setHits(board.getHits() + 1);
-				model.addAttribute("board", board);
-				
-				return "boardPage/readForm";
-			} else {
-				//  4-2.
-				return "redirect:list";
-			}
-			
 		}
+		
+		// 조회수를 올려준다(올려준 다음에 읽어 오든지, 읽은 다음에 조회수를 증가시켜 보내든지)
+		if (boardDAO.updateHits(boardnum) != 1) {
+			return "redirect:list";
+		} 
+			
+		// 제대로 조회수 증가가 이루어지면 보낼 것도 조회수 증가
+		board.setHits(board.getHits() + 1);
+		
+		// 글에 딸린 리플 읽어오기
+		ArrayList<Reply> replyList = replyDAO.readAll(boardnum);
+		
+		model.addAttribute("board", board);
+		model.addAttribute("replyList", replyList);
+		
+		return "boardPage/readForm";
 		
 	}
 }
