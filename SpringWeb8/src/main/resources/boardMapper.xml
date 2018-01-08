@@ -5,12 +5,23 @@
 
 <mapper namespace="global.sesoc.web8.mapper.BoardMapper">
 	
+	<!-- 게시글 개수 -->
+	<select id="totalNum" resultType="int">
+		SELECT
+			COUNT(boardnum)
+		FROM
+			board8
+	</select>
+	
+	
 	<!-- 모든 글 읽어오기 -->
 	<select id="readAll" resultType="Board">
 		SELECT
 			*
 		FROM
 			board8
+		ORDER BY
+			boardnum DESC
 	</select>
 	
 	<!-- 글 하나 읽어오기 -->

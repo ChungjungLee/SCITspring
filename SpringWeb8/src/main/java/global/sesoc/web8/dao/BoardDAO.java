@@ -2,6 +2,7 @@ package global.sesoc.web8.dao;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,12 +38,20 @@ public class BoardDAO {
 	 * 모든 글 읽기
 	 * @return
 	 */
-	public ArrayList<Board> readAll() {
+	public ArrayList<Board> readAll(int page) {
 		ArrayList<Board> result = null;
 		
+		// mybatis가 굳이 계산하지 않아도 글을 차례로 가져올 수 있도록 도와준다
+		int count = 10; // 몇 개 가져올 것인가
+		int start = (page - 1) * count; // 어디서부터 시작할 것인가
+		
 		try {
+			
+			// 자동으로 글을 순서대로 가져오기 위해 필요한 객체
+			RowBounds rb = new RowBounds(start, count);
+			
 			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
-			result = mapper.readAll();
+			result = mapper.readAll(rb);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

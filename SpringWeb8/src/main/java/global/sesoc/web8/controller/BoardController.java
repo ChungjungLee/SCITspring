@@ -34,12 +34,13 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "list", method = RequestMethod.GET)
-	public String list(Model model) {
-		ArrayList<Board> result = boardDAO.readAll();
+	public String list(Integer pagenum, Model model) {
+		ArrayList<Board> result = boardDAO.readAll(pagenum);
 		int numOfList = result.size();
 		
 		model.addAttribute("list", result);
 		model.addAttribute("numOfList", numOfList);
+		model.addAttribute("pagenum", pagenum);
 		
 		return "boardPage/list";
 	}
@@ -73,11 +74,11 @@ public class BoardController {
 		
 		if (result == 1) {
 			// 글쓰기 성공
-			return "redirect:list";
+			return "redirect:list?pagenum=1";
 		} else {
 			// 글쓰기 실패
 			logger.info("글쓰기 실패");
-			return "redirect:list";
+			return "redirect:list?pagenum=1";
 		}
 	}
 	
@@ -93,12 +94,12 @@ public class BoardController {
 		Board board = boardDAO.readOne(boardnum);
 		
 		if (board == null) {
-			return "redirect:list";
+			return "redirect:list?pagenum=1";
 		}
 		
 		// 조회수를 올려준다(올려준 다음에 읽어 오든지, 읽은 다음에 조회수를 증가시켜 보내든지)
 		if (boardDAO.updateHits(boardnum) != 1) {
-			return "redirect:list";
+			return "redirect:list?pagenum=1";
 		} 
 			
 		// 제대로 조회수 증가가 이루어지면 보낼 것도 조회수 증가
@@ -154,7 +155,7 @@ public class BoardController {
 		if (result == 1) {
 			return "redirect:read?boardnum=" + board.getBoardnum();
 		} else {
-			return "redirect:list";
+			return "redirect:list?pagenum=1";
 		}
 		
 	}

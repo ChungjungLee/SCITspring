@@ -2,11 +2,15 @@ package global.sesoc.web8.mapper;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.session.RowBounds;
+
 import global.sesoc.web8.vo.Board;
 
 public interface BoardMapper {
 	
-	ArrayList<Board> readAll();
+	int totalNum();
+	
+	ArrayList<Board> readAll(RowBounds rb);
 	
 	Board readOne(int boardnum);
 	
