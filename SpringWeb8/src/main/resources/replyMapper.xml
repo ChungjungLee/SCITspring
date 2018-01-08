@@ -22,8 +22,59 @@
 			boardnum = #{value}
 	</select>
 	
+	<!-- 리플 하나 읽어오기 -->
+	<select id="readOne" parameterType="int" resultType="Reply">
+		SELECT
+			*
+		FROM
+			reply8
+		WHERE
+			replynum = #{value}
+	</select>
+	
 	<!-- 리플 수정 -->
+	<update id="update" parameterType="Reply">
+		UPDATE
+			reply8
+		SET
+			text = #{text}
+		WHERE
+			replynum = #{replynum}
+	</update>
 	
 	<!-- 리플 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM
+			reply8
+		WHERE
+			replynum = #{value}
+	</delete>
 	
+	<!-- 시퀀스 하나 줄이기 -->
+	<update id="decrease_seq">
+		ALTER SEQUENCE 
+			reply8_seq
+		INCREMENT BY -1
+	</update>
 </mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

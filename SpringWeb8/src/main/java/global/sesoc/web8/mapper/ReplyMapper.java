@@ -10,4 +10,11 @@ public interface ReplyMapper {
 	
 	ArrayList<Reply> readAll(int boardnum);
 	
+	Reply readOne(int replynum);
+	
+	int update(Reply reply);
+	
+	int delete(int replynum);
+	
+	void decrease_seq();
 }

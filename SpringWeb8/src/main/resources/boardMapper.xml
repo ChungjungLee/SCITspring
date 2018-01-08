@@ -41,6 +41,25 @@
 			boardnum = #{value}
 	</update>
 	
+	<!-- 글 수정 -->
+	<update id="update" parameterType="Board">
+		UPDATE
+			board8
+		SET
+			title = #{title},
+			content = #{content}
+		WHERE
+			boardnum = #{boardnum}
+	</update>
+	
+	<!-- 글 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM
+			board8
+		WHERE
+			boardnum = #{value}
+	</delete>
+	
 </mapper>
 
 

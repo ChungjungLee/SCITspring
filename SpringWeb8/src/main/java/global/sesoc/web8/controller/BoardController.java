@@ -49,7 +49,8 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "write", method = RequestMethod.GET)
-	public String writeForm() {
+	public String writeForm(Model model) {
+		model.addAttribute("action", "write");
 		return "boardPage/write";
 	}
 	
@@ -110,6 +111,79 @@ public class BoardController {
 		model.addAttribute("replyList", replyList);
 		
 		return "boardPage/readForm";
+		
+	}
+	
+	/**
+	 * 게시글 수정 페이지로 이동
+	 * @param boardnum
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping (value = "update", method = RequestMethod.GET)
+	public String updateForm(Integer boardnum, Model model, HttpSession session) {
+		
+		String loginid = (String) session.getAttribute("loginid");
+		
+		Board board = boardDAO.readOne(boardnum);
+		
+		if (board == null || !board.getId().equals(loginid)) {
+			return "error";
+		}
+		
+		model.addAttribute("action", "update");
+		model.addAttribute("board", board);
+		return "boardPage/write";
+	}
+	
+	/**
+	 * 게시글 수정 실제 로직, 
+	 * @param boardnum
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping (value = "update", method = RequestMethod.POST)
+	public String update(Board board, HttpSession session) {
+		
+		String loginid = (String) session.getAttribute("loginid");
+		board.setId(loginid);
+		
+		int result = boardDAO.update(board);
+		
+		if (result == 1) {
+			return "redirect:read?boardnum=" + board.getBoardnum();
+		} else {
+			return "redirect:list";
+		}
+		
+	}
+	
+	/**
+	 * 게시글을 삭제한다
+	 * @param boardnum
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping (value = "delete", method = RequestMethod.GET)
+	public String delete(Integer boardnum, HttpSession session) {
+		
+		String loginid = (String) session.getAttribute("loginid");
+		
+		Board board = boardDAO.readOne(boardnum);
+		
+		if (board == null || !board.getId().equals(loginid)) {
+			return "error";
+		}
+		
+		int result = boardDAO.delete(boardnum);
+		
+		if (result == 1) {
+			return "redirect:read?boardnum=" + boardnum;
+		} else {
+			logger.info("게시글 삭제 중 오류 발생");
+			return "redirect:read?boardnum=" + boardnum;
+		}
 		
 	}
 }

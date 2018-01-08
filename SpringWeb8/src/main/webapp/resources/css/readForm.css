@@ -12,13 +12,17 @@
 	width: 100%;
 	clear: both;
 }
+
 .col-header {
+	width: 20%;
 	background-color: #999999;
 	float: left;
 	clear: left;
+	text-align: center;
 }
 
 .col-body {
+	width: 80%;
 	background-color: #f2f2f2;
 	float: left;
 	clear: right;
@@ -28,33 +32,68 @@
 	width: 100%;
 	float: left;
 	clear: both;
+	text-align: center;
 }
 
 .reply-input {
-	width: 100%;
-	float: left;
+	width: 90%;
+	margin: auto;
 	clear: both;
+	text-align: center;
+}
+
+.outer {
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+
+.inner {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.centered {
+	position: relative;
+	display: inline-block;
+	width: 100%;
 }
 
 .reply-content {
-	float: left;
+	width: 90%;
+	margin: auto;
 	clear: both;
 }
 
+.reply-row {
+	width: 100%;
+	float: left;
+	clear: both;
+	display: flex;
+	vertical-align: middle;
+}
+
 .col-header-reply {
+	width: 20%;
 	background-color: #999999;
 	float: left;
 	clear: left;
 }
 
 .col-body-reply {
+	width: 50%;
+	word-break: break-all;
+	word-wrap: break-word;
 	background-color: #f2f2f2;
 	float: left;
 }
 
-.reply-menu {
+.col-reply-menu {
+	width: 15%;
 	background-color: #f2f2f2;
 	float: left;
+	text-align: center;
 }
 
 

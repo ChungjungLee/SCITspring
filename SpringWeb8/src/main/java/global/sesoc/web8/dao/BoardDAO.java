@@ -85,6 +85,42 @@ public class BoardDAO {
 		
 		return result;
 	}
+	
+	/**
+	 * 해당 글을 수정한다
+	 * @param board
+	 * @return
+	 */
+	public int update(Board board) {
+		int result = 0;
+		
+		try {
+			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
+			result = mapper.update(board);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 해당 게시글을 삭제한다
+	 * @param boardnum
+	 * @return
+	 */
+	public int delete(int boardnum) {
+		int result = 0;
+		
+		try {
+			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
+			result = mapper.delete(boardnum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 }
 
 
