@@ -1,6 +1,7 @@
 package global.sesoc.web8.mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 
@@ -21,5 +22,11 @@ public interface BoardMapper {
 	int update(Board board);
 	
 	int delete(int boardnum);
+	
+	ArrayList<Board> selectList(RowBounds rb, HashMap<String, Object> map);
+
+	int selectTotalCount(String text);
+	
+	
 	
 }

@@ -20,7 +20,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 		
 		logger.info("LoginInterceptor 실행");
-		
+		logger.info("접속 IP: {}", getClientIP(request));
 		// 세션을 받아와서 로그인 아이디가 있는지 확인 필요
 		HttpSession session = request.getSession();
 		String loginid = (String)session.getAttribute("loginid");
@@ -37,8 +37,24 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		
-		
 		return super.preHandle(request, response, handler);
+	}
+	
+	private String getClientIP(HttpServletRequest request) {
+		String ip = request.getHeader("X-FORWARDED-FOR");
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("WL-Proxy-Client-IP");  // 웹로직
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getRemoteAddr() ;
+		}
+		
+		return ip;
 	}
 	
 }

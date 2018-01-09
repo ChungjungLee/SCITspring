@@ -24,6 +24,7 @@
 			boardnum DESC
 	</select>
 	
+	
 	<!-- 글 하나 읽어오기 -->
 	<select id="readOne" parameterType="int" resultType="Board">
 		SELECT
@@ -34,6 +35,7 @@
 			boardnum = #{value}
 	</select>
 	
+	
 	<!-- 글 쓰기 -->
 	<insert id="write" parameterType="Board">
 		INSERT INTO board8
@@ -41,6 +43,7 @@
 		VALUES
 			(board8_seq.nextval, #{id}, #{title}, #{content})
 	</insert>
+	
 	
 	<!-- 조회수 증가 -->
 	<update id="updateHits" parameterType="int">
@@ -51,6 +54,7 @@
 		WHERE
 			boardnum = #{value}
 	</update>
+	
 	
 	<!-- 글 수정 -->
 	<update id="update" parameterType="Board">
@@ -63,6 +67,7 @@
 			boardnum = #{boardnum}
 	</update>
 	
+	
 	<!-- 글 삭제 -->
 	<delete id="delete" parameterType="int">
 		DELETE FROM
@@ -71,6 +76,33 @@
 			boardnum = #{value}
 	</delete>
 	
+	
+	<!-- 게시글 검색 -->
+	<select id="selectList" parameterType="HashMap" resultType="Board">
+		SELECT
+			*
+		FROM
+			board8
+		<if test="_parameter.get('text') != null and _parameter.get('text') != ''">
+		WHERE
+			title LIKE '%' || #{text} || '%'
+		</if>
+		ORDER BY
+			boardnum DESC
+	</select>
+	
+	
+	<!-- 게시글 개수 -->
+	<select id="selectTotalCount" parameterType="String" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			board8
+		<if test="_parameter != null and _parameter != ''">
+		WHERE
+			title LIKE '%' || #{value} || '%'
+		</if>
+	</select>
 </mapper>
 
 

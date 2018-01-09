@@ -11,9 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import global.sesoc.web8.dao.BoardDAO;
 import global.sesoc.web8.dao.ReplyDAO;
+import global.sesoc.web8.util.PageNavigator;
 import global.sesoc.web8.vo.Board;
 import global.sesoc.web8.vo.Reply;
 
@@ -28,19 +30,40 @@ public class BoardController {
 	
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
+	private final int LIMIT = 10;	// 페이지 당 보여줄 게시글 수
+	private final int PAGES = 5;	// 그룹 당 보여줄 페이지 수
+	
 	/**
 	 * 글 목록 출력하는 페이지로 이동
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping (value = "list", method = RequestMethod.GET)
-	public String list(Integer pagenum, Model model) {
-		ArrayList<Board> result = boardDAO.readAll(pagenum);
-		int numOfList = result.size();
+	public String list(
+			Model model, 
+			@RequestParam(value="pagenum", defaultValue="1") int currentPage, 
+			@RequestParam(value="searchOption", defaultValue="") String select,
+			@RequestParam(value="searchText", defaultValue="") String text) {
+		/*
+		 * @RequestParam() annotation
+		 * value의 값에 맞는 사용자의 argument를 받아와서 해당 변수에 넣겠다
+		 * argument에서 찾지 못하면 defaultValue의 값을 넣는다
+		 */
 		
-		model.addAttribute("list", result);
-		model.addAttribute("numOfList", numOfList);
-		model.addAttribute("pagenum", pagenum);
+		// 검색된 결과의 게시글 총 수
+		int totalCount = boardDAO.selectTotalCount(text);
+		
+		// 네비게이터 표시를 위한 객체 생성
+		PageNavigator navi = new PageNavigator(LIMIT, PAGES, currentPage, totalCount);
+		
+		// LIMIT 몇 개 만큼 가져올 것인지
+		// page(OFFSET) 어디서부터 가져올 것인지
+		ArrayList<Board> searchResult = boardDAO.search(LIMIT, currentPage, select, text);
+		
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("searchList", searchResult);
+		model.addAttribute("navi", navi);
 		
 		return "boardPage/list";
 	}

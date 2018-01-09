@@ -3,6 +3,8 @@ package global.sesoc.web8;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -20,11 +22,30 @@ public class HomeController {
 	private static ArrayList<Long> primeList = new ArrayList<Long>();
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home() {
+	public String home(HttpServletRequest request) {
 		logger.info("Welcome web8");
+		logger.info("접속IP: {}", getClientIP(request));
 		//getEuler3();
 		return "home";
 	}
+	
+	private String getClientIP(HttpServletRequest request) {
+		String ip = request.getHeader("X-FORWARDED-FOR");
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		
+		if (ip == null || ip.length() == 0) {
+			ip = request.getHeader("WL-Proxy-Client-IP");  // 웹로직
+		}
+
+		if (ip == null || ip.length() == 0) {
+			ip = request.getRemoteAddr() ;
+		}
+		
+		return ip;
+	}
+	
 	
 	private void getEuler3() {
 		long x = 2L;

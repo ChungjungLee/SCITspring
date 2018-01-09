@@ -1,6 +1,7 @@
 package global.sesoc.web8.dao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
@@ -124,6 +125,52 @@ public class BoardDAO {
 		try {
 			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
 			result = mapper.delete(boardnum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 게시판 제목 검색
+	 * @param limit 페이지 당 보여줄 게시글 수
+	 * @param page 현재 페이지
+	 * @param select 검색 조건
+	 * @param text 검색어
+	 * @return
+	 */
+	public ArrayList<Board> search(int limit, int page, String select, String text) {
+		ArrayList<Board> result = null;
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("select", select);
+		map.put("text", text);
+		
+		// RowBounds(int offset, int limit)
+		RowBounds rb = new RowBounds((page - 1) * limit, limit);
+		
+		try {
+			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
+			result = mapper.selectList(rb, map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 게시물의 총 개수를 반환. 검색 결과의 총 개수를 반환
+	 * @param text
+	 * @return
+	 */
+	public int selectTotalCount(String text) {
+		int result = 0;
+		
+		try {
+			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
+			result = mapper.selectTotalCount(text);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
