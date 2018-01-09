@@ -50,15 +50,16 @@ public class BoardController {
 		 * argument에서 찾지 못하면 defaultValue의 값을 넣는다
 		 */
 		
+		// 검색어를 가지고 해당 하는 게시글을 전부 읽어온다
+		// LIMIT 몇 개 만큼 가져올 것인지
+		// page(OFFSET) 어디서부터 가져올 것인지
+		ArrayList<Board> searchResult = boardDAO.search(LIMIT, currentPage, select, text);
+		
 		// 검색된 결과의 게시글 총 수
 		int totalCount = boardDAO.selectTotalCount(text);
 		
 		// 네비게이터 표시를 위한 객체 생성
 		PageNavigator navi = new PageNavigator(LIMIT, PAGES, currentPage, totalCount);
-		
-		// LIMIT 몇 개 만큼 가져올 것인지
-		// page(OFFSET) 어디서부터 가져올 것인지
-		ArrayList<Board> searchResult = boardDAO.search(LIMIT, currentPage, select, text);
 		
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("totalCount", totalCount);

@@ -12,7 +12,6 @@
 		<title>[ 글 목록 ]</title>
 	</head>
 	<body>
-		<script type="text/javascript">alert('Error');</script>
 		<div class="section">
 			<div class="header">
 				[게시판]

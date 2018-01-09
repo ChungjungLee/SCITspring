@@ -83,9 +83,26 @@
 			*
 		FROM
 			board8
-		<if test="_parameter.get('text') != null and _parameter.get('text') != ''">
-		WHERE
-			title LIKE '%' || #{text} || '%'
+		<if test="_parameter.get('select') != null and _parameter.get('select') != ''">
+			<choose>
+				<when test="_parameter.get('select') == 'title'">
+					WHERE
+						title LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'author'">
+					WHERE
+						id LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'content'">
+					WHERE
+						content LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'titleAndContent'">
+					WHERE
+						title LIKE '%' || #{text} || '%' OR
+						content LIKE '%' || #{text} || '%'
+				</when>
+			</choose>
 		</if>
 		ORDER BY
 			boardnum DESC
