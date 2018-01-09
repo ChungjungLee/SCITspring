@@ -72,13 +72,10 @@
 	width: 20%;
 }
 
-.navi {
+.navSearch {
 	width: 100%;
 	float: left;
 	clear: both;
-}
-
-.pagination {
 	text-align: center;
 }
 

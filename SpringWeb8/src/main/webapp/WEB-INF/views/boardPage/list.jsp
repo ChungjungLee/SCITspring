@@ -5,6 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<!-- Bootstrap 파일 -->
+		<link rel="stylesheet" href="<c:url value='/resources/bootstrap/css/bootstrap.css'/>">
 		<!-- CSS 파일 -->
 		<link href="<c:url value='/resources/css/list.css'/>" rel="stylesheet" type="text/css">
 		<!-- JavaScript 파일 -->
@@ -12,6 +14,32 @@
 		<title>[ 글 목록 ]</title>
 	</head>
 	<body>
+		<nav class="navbar navbar-default">
+			<div class="container-fulid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#navbar-collapse-1"
+						aria-expanded="false">
+						<span class="sr-only"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="<c:url value='/'/>">홈으로</a>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-naver-collapse-1">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="customer/join">회원가입<span class="sr-only"></span></a>
+					</li>
+					<li class="active">
+						<a href="customer/login">로그인<span class="sr-only"></span></a>
+					</li>
+				</ul>
+			
+			</div>
+		</nav> <!-- header navigation -->
+		
 		<div class="section">
 			<div class="header">
 				[게시판]
@@ -65,39 +93,36 @@
 						</div>
 					</div>
 				</c:forEach>
-			</div>
-			<div class="navi">
-				<div class="pagination">
-					<c:if test="${navi.startPageGroup > 1}">
-						<a href="javascript:search(${navi.startPageGroup - 1})">이전 </a>
-					</c:if>
-					<c:forEach var="p" begin="${navi.startPageGroup}" end="${navi.endPageGroup}">
-						<c:choose>
-							<c:when test="${currentPage == p}">
-								<span style="font-weight: bolder;">${p}</span>
-							</c:when>
-							<c:otherwise>
-								<a href="javascript:search(${p})">${p} </a>
-							</c:otherwise>
-						</c:choose>
-						<a href="javascript:search(${p})">${p} </a>
-						<!-- 
-						<a href="list?pagenum=${p}&searchOption=${param.searchOption}&searchText=${param.searchText}">
+			</div> <!-- board -->
+			<div class="navSearch">
+				<nav>
+					<ul class="pagination">
+						<c:if test="${navi.startPageGroup > 1}">
+							<li>
+								<a href="javascript:search(${navi.startPageGroup - 1})">이전 </a>
+							</li>
+						</c:if>
+						<c:forEach var="p" begin="${navi.startPageGroup}" end="${navi.endPageGroup}">
 							<c:choose>
 								<c:when test="${currentPage == p}">
-									<span style="font-weight: bolder;">${p}</span>
+									<li>
+										<span style="font-weight: bolder;">${p}</span>
+									</li>
 								</c:when>
 								<c:otherwise>
-									${p}
+									<li>
+										<a href="javascript:search(${p})">${p} </a>
+									</li>
 								</c:otherwise>
 							</c:choose>
-						</a>
-						 -->
-					</c:forEach>
-					<c:if test="${navi.endPageGroup < navi.totalPageCount}">
-						<a href="javascript:search(${navi.endPageGroup + 1})">다음 </a>
-					</c:if>
-				</div>
+						</c:forEach>
+						<c:if test="${navi.endPageGroup < navi.totalPageCount}">
+							<li>
+								<a href="javascript:search(${navi.endPageGroup + 1})">다음 </a>
+							</li>
+						</c:if>
+					</ul>
+				</nav>
 				<div class="searchbar">
 					<!-- 이 폼은 get 방식을 이용 -->
 					<form id="searchForm" action="list" method="GET">
@@ -112,14 +137,26 @@
 						<input type="button" value="검색" onclick="javascript:search(1)">
 					</form>
 				</div>
-			</div>
+			</div> <!-- nav -->
 		</div>
 	</body>
 </html>
 
 
 
-
+<!-- 
+Another pagination way
+<a href="list?pagenum=${p}&searchOption=${param.searchOption}&searchText=${param.searchText}">
+	<c:choose>
+		<c:when test="${currentPage == p}">
+			<span style="font-weight: bolder;">${p}</span>
+		</c:when>
+		<c:otherwise>
+			${p}
+		</c:otherwise>
+	</c:choose>
+</a>
+ -->
 
 
 
