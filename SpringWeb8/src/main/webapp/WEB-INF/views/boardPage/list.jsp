@@ -73,13 +73,14 @@
 					</c:if>
 					<c:forEach var="p" begin="${navi.startPageGroup}" end="${navi.endPageGroup}">
 						<c:choose>
-							<c:when test="${p == navi.currentPage}">
+							<c:when test="${currentPage == p}">
 								<span style="font-weight: bolder;">${p}</span>
 							</c:when>
 							<c:otherwise>
 								<a href="javascript:search(${p})">${p} </a>
 							</c:otherwise>
 						</c:choose>
+						<a href="javascript:search(${p})">${p} </a>
 						<!-- 
 						<a href="list?pagenum=${p}&searchOption=${param.searchOption}&searchText=${param.searchText}">
 							<c:choose>
