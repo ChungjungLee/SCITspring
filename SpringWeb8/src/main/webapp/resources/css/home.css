@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+
+.jumbotron {
+	background-image: url('../img/jumbotron_background.jpg');
+	background-size: cover;
+}
+
+
+
