@@ -48,16 +48,18 @@
 					<c:out value="${board.content}" />
 				</div>
 				<c:if test="${attachmentList != null && attachmentListSize != 0}">
-					<div class="col-header">
-						파일첨부
-					</div>
-					<c:forEach var="attachment" items="${attachmentList}">
-						<div class="col-body">
-							<a href="download?attachmentnum=${attachment.attachmentnum}">
-								${attachment.originalfile}
-							</a>
+					<div class="">
+						<div class="col-header">
+							파일첨부
 						</div>
-					</c:forEach>
+						<div class="col-body">
+							<c:forEach var="attachment" items="${attachmentList}">
+									<a href="download?attachmentnum=${attachment.attachmentnum}">
+										${attachment.originalfile}
+									</a> <br>
+							</c:forEach>
+						</div>
+					</div>
 				</c:if>
 			</div>
 			<div class="navbar">

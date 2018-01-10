@@ -103,7 +103,7 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "write", method = RequestMethod.POST)
-	public String write(Board board, ArrayList<MultipartFile> uploads, HttpSession session) {
+	public String write(Board board, MultipartFile[] uploads, HttpSession session) {
 		/*
 		 * 파일을 제외한 순수 글 처리를 먼저 해줘야 foreign key를 사용하는 첨부파일을 등록할 수 있다
 		 */
@@ -122,32 +122,31 @@ public class BoardController {
 		/*
 		 * 첨부파일 처리
 		 */
-		logger.info("업로드 파일 개수: {}", uploads.size());
+		logger.info("업로드 파일 개수: {}", uploads.length);
 		logger.info("입력된 게시글의 PK: {}", board.getBoardnum());
 		
-		if (uploads.isEmpty() == false) {
-			logger.info("첨부파일 저장하려고 함");
-			/*
-			// storage에 file 저장
-			String savedFile = FileService.saveFile(upload, UPLOAD_PATH);
-			
-			Attachment attachment = new Attachment();
-			attachment.setBoardnum((Integer) resultMap.get("boardnum"));
-			attachment.setOriginalfile(upload.getOriginalFilename());
-			attachment.setSavedfile(savedFile);
-			
-			// DB에 첨부파일 저장
-			int resultFile = attachmentDAO.write(attachment);
-			if (resultFile == 1) {
-				logger.info("첨부파일 업로드 완료");
-			} else {
-				if (FileService.deleteFile(UPLOAD_PATH + "/" + savedFile)) {
-					logger.info("파일 업로드 실패로 저장된 파일 삭제 성공");
+		if (uploads != null && uploads.length != 0) {
+			for (MultipartFile upload : uploads) {
+				// storage에 file 저장
+				String savedFile = FileService.saveFile(upload, UPLOAD_PATH);
+				
+				Attachment attachment = new Attachment();
+				attachment.setBoardnum((Integer) resultMap.get("boardnum"));
+				attachment.setOriginalfile(upload.getOriginalFilename());
+				attachment.setSavedfile(savedFile);
+				
+				// DB에 첨부파일 저장
+				int resultFile = attachmentDAO.write(attachment);
+				if (resultFile == 1) {
+					logger.info("첨부파일 업로드 완료");
 				} else {
-					logger.info("파일 업로드 실패로 저장된 파일 삭제 실패");
+					if (FileService.deleteFile(UPLOAD_PATH + "/" + savedFile)) {
+						logger.info("파일 업로드 실패로 저장된 파일 삭제 성공");
+					} else {
+						logger.info("파일 업로드 실패로 저장된 파일 삭제 실패");
+					}
 				}
 			}
-			*/
 		}
 		
 		return "redirect:list?pagenum=1";

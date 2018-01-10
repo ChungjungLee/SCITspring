@@ -16,6 +16,7 @@
 .col-header {
 	width: 20%;
 	background-color: #999999;
+	display: flex;
 	float: left;
 	clear: left;
 	text-align: center;
