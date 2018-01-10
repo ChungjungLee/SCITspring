@@ -25,7 +25,7 @@ public interface BoardMapper {
 	
 	ArrayList<Board> selectList(RowBounds rb, HashMap<String, Object> map);
 
-	int selectTotalCount(String text);
+	int selectTotalCount(HashMap<String, Object> map);
 	
 	
 	

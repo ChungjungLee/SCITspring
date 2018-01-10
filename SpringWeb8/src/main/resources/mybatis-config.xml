@@ -4,11 +4,13 @@
   "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<typeAliases>
+		<typeAlias type="global.sesoc.web8.vo.Attachment" alias="Attachment" />
 		<typeAlias type="global.sesoc.web8.vo.Board" alias="Board" />
 		<typeAlias type="global.sesoc.web8.vo.Customer" alias="Customer" />
 		<typeAlias type="global.sesoc.web8.vo.Reply" alias="Reply" />
 	</typeAliases>
 	<mappers>
+		<mapper resource="attachmentMapper.xml" />
 		<mapper resource="customerMapper.xml" />
 		<mapper resource="boardMapper.xml" />
 		<mapper resource="replyMapper.xml" />

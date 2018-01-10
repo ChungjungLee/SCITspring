@@ -127,10 +127,10 @@
 					<!-- 이 폼은 get 방식을 이용 -->
 					<form id="searchForm" action="list" method="GET">
 						<select name="searchOption">
-							<option value="title">제목</option>
-							<option value="author">작성자</option>
-							<option value="content">글 내용</option>
-							<option value="titleAndContent">제목+글 내용</option>
+							<option value="title" <c:if test="${param.searchOption == 'title'}">selected</c:if>>제목</option>
+							<option value="author" <c:if test="${param.searchOption == 'author'}">selected</c:if>>작성자</option>
+							<option value="content" <c:if test="${param.searchOption == 'content'}">selected</c:if>>글 내용</option>
+							<option value="titleAndContent" <c:if test="${param.searchOption == 'titleAndContent'}">selected</c:if>>제목+글 내용</option>
 						</select>
 						<input type="hidden" id="page" name="pagenum">
 						<input type="text" name="searchText" value="${param.searchText}"> 

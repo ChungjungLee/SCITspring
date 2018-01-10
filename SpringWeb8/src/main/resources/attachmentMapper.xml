@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="global.sesoc.web8.mapper.AttachmentMapper">
+	
+	<!-- 첨부 파일 업로드 -->
+	<insert id="insert" parameterType="Attachment">
+		INSERT INTO attachment8
+			(attachmentnum
+			, boardnum
+			, originalfile
+			, savedfile)
+		VALUES
+			(attachment8_seq.nextval
+			, #{boardnum}
+			, #{originalfile}
+			, #{savedfile})
+	</insert>
+	
+	<!-- 특정 게시글의 첨부 파일 모두 가져오기 -->
+	<select id="selectAll" parameterType="int" resultType="Attachment">
+		SELECT
+			*
+		FROM
+			attachment8
+		WHERE
+			boardnum = #{value}
+	</select>
+	
+	<!-- 첨부 파일 하나 가져오기 -->
+	<select id="selectOne" parameterType="int" resultType="Attachment">
+		SELECT
+			*
+		FROM
+			attachment8
+		WHERE
+			attachmentnum = #{value}
+	</select>
+	
+	<!-- 첨부 파일 수정 -->
+	<update id="update" parameterType="Attachment">
+		UPDATE
+			attachment8
+		SET
+			originalfile = #{originalfile}
+			, savedfile = #{savedfile}
+		WHERE
+			attachmentnum = #{attachmentnum}
+	</update>
+	
+	<!-- 첨부 파일 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM
+			attachment8
+		WHERE
+			attachmentnum = #{value}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

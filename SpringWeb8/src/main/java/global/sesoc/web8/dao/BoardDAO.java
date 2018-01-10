@@ -22,16 +22,21 @@ public class BoardDAO {
 	 * @param board
 	 * @return
 	 */
-	public int write(Board board) {
-		int result = 0;
+	public HashMap<String, Object> write(Board board) {
+		HashMap<String, Object> result = new HashMap<>();
+		int inserted = 0;
 		
 		try {
 			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
-			result = mapper.write(board);
+			inserted = mapper.write(board);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		result.put("result", inserted);
+		result.put("boardnum", board.getBoardnum());
+
+		System.out.println(board.getBoardnum());
 		return result;
 	}
 	
@@ -165,12 +170,16 @@ public class BoardDAO {
 	 * @param text
 	 * @return
 	 */
-	public int selectTotalCount(String text) {
+	public int selectTotalCount(String select, String text) {
 		int result = 0;
+		
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("select", select);
+		map.put("text", text);
 		
 		try {
 			BoardMapper mapper = sqlsession.getMapper(BoardMapper.class);
-			result = mapper.selectTotalCount(text);
+			result = mapper.selectTotalCount(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

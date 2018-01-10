@@ -7,21 +7,17 @@ public class Board {
 	private String content;
 	private String inputdate;
 	private int hits;
-	private String originalfile;
-	private String savedfile;
 	
 	public Board() {}
 	
-	public Board(int boardnum, String id, String title, String content, String inputdate, int hits, String originalfile,
-			String savedfile) {
+	public Board(int boardnum, String id, String title, 
+			String content, String inputdate, int hits) {
 		this.boardnum = boardnum;
 		this.id = id;
 		this.title = title;
 		this.content = content;
 		this.inputdate = inputdate;
 		this.hits = hits;
-		this.originalfile = originalfile;
-		this.savedfile = savedfile;
 	}
 	
 	public int getBoardnum() {
@@ -60,23 +56,10 @@ public class Board {
 	public void setHits(int hits) {
 		this.hits = hits;
 	}
-	public String getOriginalfile() {
-		return originalfile;
-	}
-	public void setOriginalfile(String originalfile) {
-		this.originalfile = originalfile;
-	}
-	public String getSavedfile() {
-		return savedfile;
-	}
-	public void setSavedfile(String savedfile) {
-		this.savedfile = savedfile;
-	}
 	
 	@Override
 	public String toString() {
 		return "Board [boardnum=" + boardnum + ", id=" + id + ", title=" + title + ", content=" + content
-				+ ", inputdate=" + inputdate + ", hits=" + hits + ", originalfile=" + originalfile + ", savedfile="
-				+ savedfile + "]";
+				+ ", inputdate=" + inputdate + ", hits=" + hits + "]";
 	}
 }

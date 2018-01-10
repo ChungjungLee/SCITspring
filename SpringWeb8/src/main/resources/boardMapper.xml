@@ -37,11 +37,26 @@
 	
 	
 	<!-- 글 쓰기 -->
+	<!-- 동적 쿼리문에서 따옴표 없는 것은 getter를 부르는 것으로 인식한다(parmeter로 객체가 넘어올 경우) -->
+	<!-- parameter가 hashmap일 경우에는 key로 인식해 value를 가져온다 -->
 	<insert id="write" parameterType="Board">
 		INSERT INTO board8
-			(boardnum, id, title, content)
+			(
+				boardnum 
+				, id
+				, title 
+				, content
+			)
 		VALUES
-			(board8_seq.nextval, #{id}, #{title}, #{content})
+			(
+				board8_seq.nextval
+				, #{id}
+				, #{title}
+				, #{content}
+			)
+		<selectKey keyProperty="boardnum" resultType="int" order="AFTER">
+			select board8_seq.currval FROM DUAL
+		</selectKey>
 	</insert>
 	
 	
@@ -110,14 +125,31 @@
 	
 	
 	<!-- 게시글 개수 -->
-	<select id="selectTotalCount" parameterType="String" resultType="int">
+	<select id="selectTotalCount" parameterType="HashMap" resultType="int">
 		SELECT
 			COUNT(*)
 		FROM
 			board8
-		<if test="_parameter != null and _parameter != ''">
-		WHERE
-			title LIKE '%' || #{value} || '%'
+		<if test="_parameter.get('select') != null and _parameter.get('select') != ''">
+			<choose>
+				<when test="_parameter.get('select') == 'title'">
+					WHERE
+						title LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'author'">
+					WHERE
+						id LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'content'">
+					WHERE
+						content LIKE '%' || #{text} || '%'
+				</when>
+				<when test="_parameter.get('select') == 'titleAndContent'">
+					WHERE
+						title LIKE '%' || #{text} || '%' OR
+						content LIKE '%' || #{text} || '%'
+				</when>
+			</choose>
 		</if>
 	</select>
 </mapper>

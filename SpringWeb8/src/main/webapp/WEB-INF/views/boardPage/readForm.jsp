@@ -47,12 +47,18 @@
 				<div class="col-body">
 					<c:out value="${board.content}" />
 				</div>
-				<div class="col-header">
-					파일첨부
-				</div>
-				<div class="col-body">
-					sample file path
-				</div>
+				<c:if test="${attachmentList != null && attachmentListSize != 0}">
+					<div class="col-header">
+						파일첨부
+					</div>
+					<c:forEach var="attachment" items="${attachmentList}">
+						<div class="col-body">
+							<a href="download?attachmentnum=${attachment.attachmentnum}">
+								${attachment.originalfile}
+							</a>
+						</div>
+					</c:forEach>
+				</c:if>
 			</div>
 			<div class="navbar">
 				<c:if test="${board.id == sessionScope.loginid}">

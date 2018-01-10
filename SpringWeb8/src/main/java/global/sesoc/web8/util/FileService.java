@@ -30,10 +30,10 @@ public class FileService {
 			path.mkdirs();
 		}
 		
-		//원본 파일명
+		//원본 파일명(사용하는 이유: 실제 파일명으로 디비에서 관리하면 힘들기 때문에 다른 이름으로 관리한다)
 		String originalFilename = mfile.getOriginalFilename();
 		
-		//저장할 파일명을 오늘 날짜의 년월일로 생성
+		//저장할 파일명을 오늘 날짜의 년월일로 생성(업로드 한 날을 이름으로 사용해서 디비에서 관리하겠다)
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		String savedFilename = sdf.format(new Date());
 		

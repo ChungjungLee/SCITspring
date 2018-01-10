@@ -1,7 +1,13 @@
 package global.sesoc.web8.controller;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -9,13 +15,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import global.sesoc.web8.dao.AttachmentDAO;
 import global.sesoc.web8.dao.BoardDAO;
 import global.sesoc.web8.dao.ReplyDAO;
+import global.sesoc.web8.util.FileService;
 import global.sesoc.web8.util.PageNavigator;
+import global.sesoc.web8.vo.Attachment;
 import global.sesoc.web8.vo.Board;
 import global.sesoc.web8.vo.Reply;
 
@@ -27,8 +38,13 @@ public class BoardController {
 	BoardDAO boardDAO;
 	@Autowired
 	ReplyDAO replyDAO;
+	@Autowired
+	AttachmentDAO attachmentDAO;
 	
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
+	
+	// /는 root를 가리키는데 윈도에서는 C:\boardfile에 저장 된다
+	private final String UPLOAD_PATH = "/boardfile";
 	
 	private final int LIMIT = 10;	// 페이지 당 보여줄 게시글 수
 	private final int PAGES = 5;	// 그룹 당 보여줄 페이지 수
@@ -49,6 +65,7 @@ public class BoardController {
 		 * value의 값에 맞는 사용자의 argument를 받아와서 해당 변수에 넣겠다
 		 * argument에서 찾지 못하면 defaultValue의 값을 넣는다
 		 */
+		logger.info("페이지: {} 검색 조건: {} 검색어: {}", currentPage, select, text);
 		
 		// 검색어를 가지고 해당 하는 게시글을 전부 읽어온다
 		// LIMIT 몇 개 만큼 가져올 것인지
@@ -56,7 +73,7 @@ public class BoardController {
 		ArrayList<Board> searchResult = boardDAO.search(LIMIT, currentPage, select, text);
 		
 		// 검색된 결과의 게시글 총 수
-		int totalCount = boardDAO.selectTotalCount(text);
+		int totalCount = boardDAO.selectTotalCount(select, text);
 		
 		// 네비게이터 표시를 위한 객체 생성
 		PageNavigator navi = new PageNavigator(LIMIT, PAGES, currentPage, totalCount);
@@ -86,24 +103,54 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "write", method = RequestMethod.POST)
-	public String write(Board board, HttpSession session) {
+	public String write(Board board, ArrayList<MultipartFile> uploads, HttpSession session) {
+		/*
+		 * 파일을 제외한 순수 글 처리를 먼저 해줘야 foreign key를 사용하는 첨부파일을 등록할 수 있다
+		 */
 		// 1. 세션에서 로그인된 아이디 취득(interceptor걸면 예외처리 필요 x)
 		String loginid = (String) session.getAttribute("loginid");
-		
-		// 2. board에 아이디 설정
 		board.setId(loginid);
 		
-		// 3. DAO 통해서 데이터 저장
-		int result = boardDAO.write(board);
+		HashMap<String, Object> resultMap = boardDAO.write(board);
+		int result = (Integer) resultMap.get("result");
 		
-		if (result == 1) {
-			// 글쓰기 성공
-			return "redirect:list?pagenum=1";
-		} else {
-			// 글쓰기 실패
+		if (result != 1) {
 			logger.info("글쓰기 실패");
 			return "redirect:list?pagenum=1";
 		}
+		
+		/*
+		 * 첨부파일 처리
+		 */
+		logger.info("업로드 파일 개수: {}", uploads.size());
+		logger.info("입력된 게시글의 PK: {}", board.getBoardnum());
+		
+		if (uploads.isEmpty() == false) {
+			logger.info("첨부파일 저장하려고 함");
+			/*
+			// storage에 file 저장
+			String savedFile = FileService.saveFile(upload, UPLOAD_PATH);
+			
+			Attachment attachment = new Attachment();
+			attachment.setBoardnum((Integer) resultMap.get("boardnum"));
+			attachment.setOriginalfile(upload.getOriginalFilename());
+			attachment.setSavedfile(savedFile);
+			
+			// DB에 첨부파일 저장
+			int resultFile = attachmentDAO.write(attachment);
+			if (resultFile == 1) {
+				logger.info("첨부파일 업로드 완료");
+			} else {
+				if (FileService.deleteFile(UPLOAD_PATH + "/" + savedFile)) {
+					logger.info("파일 업로드 실패로 저장된 파일 삭제 성공");
+				} else {
+					logger.info("파일 업로드 실패로 저장된 파일 삭제 실패");
+				}
+			}
+			*/
+		}
+		
+		return "redirect:list?pagenum=1";
 	}
 	
 	/**
@@ -129,16 +176,23 @@ public class BoardController {
 		// 제대로 조회수 증가가 이루어지면 보낼 것도 조회수 증가
 		board.setHits(board.getHits() + 1);
 		
+		// 글에 딸린 첨부파일 읽어오기
+		ArrayList<Attachment> attachmentList = attachmentDAO.readAll(boardnum);
+		
 		// 글에 딸린 리플 읽어오기
 		ArrayList<Reply> replyList = replyDAO.readAll(boardnum);
+		logger.info("첨부파일의 개수: {}", attachmentList.size());
 		
 		model.addAttribute("board", board);
+		model.addAttribute("attachmentList", attachmentList);
+		model.addAttribute("attachmentListSize", attachmentList.size());
 		model.addAttribute("replyList", replyList);
 		
 		return "boardPage/readForm";
 		
 	}
 	
+	// TODO: 첨부 파일 수정할 수 있도록 변경
 	/**
 	 * 게시글 수정 페이지로 이동
 	 * @param boardnum
@@ -162,8 +216,9 @@ public class BoardController {
 		return "boardPage/write";
 	}
 	
+	// TODO: 첨부 파일 수정할 수 있도록 변경
 	/**
-	 * 게시글 수정 실제 로직, 
+	 * 게시글 수정 실제 로직
 	 * @param boardnum
 	 * @param session
 	 * @return
@@ -184,6 +239,7 @@ public class BoardController {
 		
 	}
 	
+	// TODO: 게시글에 달려 있는 첨부파일 및 댓글을 지워줘야 하는지 확인 필요
 	/**
 	 * 게시글을 삭제한다
 	 * @param boardnum
@@ -211,6 +267,96 @@ public class BoardController {
 		}
 		
 	}
+	
+	/**
+	 * 게시글에 달려 있는 첨부파일을 다운로드한다
+	 * @param boardnum 게시글 번호
+	 * @param attachmentnum 다운로드 하려는 첨부파일의 번호
+	 * @param response 사용하는 이유: 파일을 읽어서 스트림으로 유저에게 보내기 위해 사용
+	 * @return
+	 */
+	@RequestMapping (value = "download", method = RequestMethod.GET)
+	public String download(Integer boardnum, Integer attachmentnum, HttpServletResponse response) {
+		/*
+		 * 다운로드하려는 첨부 파일의 번호를 알고 있으므로 DB로부터 읽어 온다
+		 */
+		Attachment attachment = attachmentDAO.readOne(attachmentnum);
+		if (attachment == null) {
+			return "error";
+		}
+		
+		String originalFile = attachment.getOriginalfile();
+		
+		try {
+			// http header 설정
+			// filename을 한글로 보내기 위해서 utf 인코딩이 필요
+			// 이 정보를 받은 클라이언트 브라우저는 앞으로 파일이 전송될 것을 예견하고 스트림을 열 준비를 한다
+			// header를 건드렸기 때문에 일반적인 페이지 이동이 아니라 파일 이동으로 동작을 할 것이다
+			response.setHeader(
+					"Content-Disposition", 
+					"attachment;filename=" + URLEncoder.encode(originalFile, "UTF-8"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// 파일이 저장된 storage의 전체 경로를 받아온다.
+		String fullPath = UPLOAD_PATH + "/" + attachment.getSavedfile();
+		
+		// 스트림을 선언(파일을 저장된 장소, 서버로부터 읽어올 것이다)
+		FileInputStream fis = null;
+		
+		// 스트림을 선언(읽어 들인 파일을 클라이언트에게 보내줄 것이다)
+		ServletOutputStream sos = null;
+		
+		try {
+			fis = new FileInputStream(fullPath);
+			// sos는 이미 response에 만들어져 있는 내장 객체이므로 그걸 가져와 사용
+			sos = response.getOutputStream();
+			// 인풋에서 아웃풋으로 파일 복사
+			FileCopyUtils.copy(fis, sos);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (fis != null)
+				try {
+					fis.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if (sos != null)
+				try {
+					sos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		// return이 없는 이유: 다운로드하고 이동할 필요가 없기 때문
+		return null;
+	}
+	
+	/*
+	@RequestMapping ()
+	public String edit(
+			MultipartFile upload,
+			Board board) {
+		Board old = boardDAO.readOne(board.getBoardnum());
+		
+		if (upload.isEmpty() == false &&
+				old.getOriginalfile() != null &&
+				old.getSavedfile() != null) {
+			// 이미 파일이 저장되어있다
+			String s = UPLOAD_PATH + "/" + old.getSavedfile();
+			FileService.deleteFile(s);
+			
+			String p = FileService.saveFile(upload, UPLOAD_PATH);
+			board.setOriginalfile(upload.getOriginalFilename());
+			board.setSavedfile(p);
+		}
+		return "";
+	}
+	*/
 }
 
 
