@@ -1,52 +1,55 @@
 @CHARSET "UTF-8";
 
-input.upload {  
-	opacity: 0;       /*input type="file" tag 투명하게 처리*/
-	width: 100px;
-	position: relative;
+input.file_name {
+	float: left;
 }
 
-button.replace {    /*button tag 에 원하는 스타일 적용*/
-	position: absolute;
-	width: 100px;
-	border-radius: 3px;
-	border-color: transparent;
-	cursor: pointer;
+.file_input_div {
+	position: relative; 
+	width: 100px; 
+	height: 23px; 
+	overflow: hidden;
+	float: left;
 }
 
-input.file_name
-{
- float: left
+.file_input_button {	/* 파일 선택 태그 대신 사용하는 버튼 */
+	width: 100px; 
+	position: absolute; 
+	top: 0px;
+	background-color: #0080ff;
+	color: #ffffff;
+	border-style: solid;
 }
 
-.file_input_div
-{
- position: relative; 
- width: 100px; 
- height: 23px; 
- overflow: hidden;
+.file_input_hidden {	/* 파일 선택 태그 숨김 */
+	font-size: 45px; 
+	position: absolute; 
+	right: 0px; 
+	top: 0px; 
+	opacity: 0; 
+	filter: alpha(opacity=0); 
+	-ms-filter: "alpha(opacity=0)"; 
+	-khtml-opacity: 0; 
+	-moz-opacity: 0;
 }
 
-.file_input_button
-{
- width: 100px; 
- position: absolute; 
- top: 0px;
- background-color: #33BB00;
- color: #FFFFFF;
- border-style: solid;
-}
 
-.file_input_hidden
-{
- font-size: 45px; 
- position: absolute; 
- right: 0px; 
- top: 0px; 
- opacity: 0; 
- 
- filter: alpha(opacity=0); 
- -ms-filter: "alpha(opacity=0)"; 
- -khtml-opacity: 0; 
- -moz-opacity: 0;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

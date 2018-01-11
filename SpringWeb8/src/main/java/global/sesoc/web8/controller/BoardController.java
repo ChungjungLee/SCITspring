@@ -190,7 +190,6 @@ public class BoardController {
 		
 	}
 	
-	// TODO: 첨부 파일 수정할 수 있도록 변경
 	/**
 	 * 게시글 수정 페이지로 이동
 	 * @param boardnum
@@ -218,7 +217,6 @@ public class BoardController {
 		return "boardPage/write";
 	}
 	
-	// TODO: 첨부 파일 수정할 수 있도록 변경
 	/**
 	 * 게시글 수정 실제 로직
 	 * @param boardnum
@@ -228,17 +226,7 @@ public class BoardController {
 	@RequestMapping (value = "update", method = RequestMethod.POST)
 	public String update(Board board, MultipartFile[] uploads, 
 			Integer[] deletenums, Integer[] attachmentnums, HttpSession session) {
-		
-		for (Integer i : attachmentnums) {
-			logger.info("첨부파일 번호: {}", i);
-		}
-		
-		logger.info("수정시 첨부파일 개수: {}", uploads.length);
-		for (MultipartFile upload : uploads) {
-			logger.info("filename: {}", upload.getOriginalFilename());
-		}
-		
-		
+
 		/* 첨부파일 삭제 */
 		if (deletenums != null) {
 			for (Integer deletenum : deletenums) {
@@ -254,9 +242,7 @@ public class BoardController {
 		
 		/* 첨부파일 수정 */
 		for (int i = 0; i < uploads.length; i++) {
-			logger.info("수정하고자 하는 파일: {}", uploads[i].getOriginalFilename());
 			if (uploads[i].getSize() == 0) continue;
-			
 			
 			// 기존 첨부파일 삭제
 			Attachment toEdit = attachmentDAO.readOne(attachmentnums[i]);
@@ -289,7 +275,6 @@ public class BoardController {
 		
 	}
 	
-	// TODO: 게시글에 달려 있는 첨부파일 및 댓글을 지워줘야 하는지 확인 필요
 	/**
 	 * 게시글을 삭제한다, 달려 있는 첨부 파일은 스토리지에서 삭제
 	 * @param boardnum
@@ -392,27 +377,6 @@ public class BoardController {
 		return null;
 	}
 	
-	/*
-	@RequestMapping ()
-	public String edit(
-			MultipartFile upload,
-			Board board) {
-		Board old = boardDAO.readOne(board.getBoardnum());
-		
-		if (upload.isEmpty() == false &&
-				old.getOriginalfile() != null &&
-				old.getSavedfile() != null) {
-			// 이미 파일이 저장되어있다
-			String s = UPLOAD_PATH + "/" + old.getSavedfile();
-			FileService.deleteFile(s);
-			
-			String p = FileService.saveFile(upload, UPLOAD_PATH);
-			board.setOriginalfile(upload.getOriginalFilename());
-			board.setSavedfile(p);
-		}
-		return "";
-	}
-	*/
 }
 
 

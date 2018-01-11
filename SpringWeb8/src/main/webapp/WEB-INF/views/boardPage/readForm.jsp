@@ -12,6 +12,8 @@
 		<title>[ 글 읽기 ]</title>
 	</head>
 	<body>
+		<jsp:include page="../commonPage/headerNav.jsp" />
+		
 		<div class="section">
 			<div class="header">
 				게시판 글 읽기

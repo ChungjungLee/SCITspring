@@ -31,7 +31,7 @@ function fileDelete(attachmentnum) {
 	if (oldAtt == '') {
 		var newAtt = attachmentnum;
 	} else {
-		var newAtt = oldAtt + ',' + attachmentnum;
+		var newAtt = oldAtt + ', ' + attachmentnum;
 	}
 	
 	eDeletenums.setAttribute('value', newAtt);

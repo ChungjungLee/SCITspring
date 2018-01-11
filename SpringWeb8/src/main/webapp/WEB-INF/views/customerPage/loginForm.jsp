@@ -7,12 +7,6 @@
 		<title>Insert title here</title>
 	</head>
 	<body>
-	
-		param.test: ${param.test}
-		param.id: ${param.id}
-		session.loginid: ${loginid}
-		
-		<br>
 		
 		<form action="login" method="POST">
 			id: <input type="text" name="id">
@@ -20,5 +14,6 @@
 			<input type="submit" value="login">
 		</form>
 		<a href="logout">logout</a>
+		
 	</body>
 </html>

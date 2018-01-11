@@ -28,7 +28,7 @@
 									class="file_name" value="${attachment.originalfile}" readonly>
 						
 							<div class="file_input_div">
-								<input type="button" value="파일 변경" class="file_input_button" />
+								<input type="button" class="file_input_button" value="파일 변경"/>
 								<input type="file" class="file_input_hidden" name="uploads"
 										onchange="javascript:fileEdit(${attachment.attachmentnum}, this.value)" />
 							</div>
@@ -44,7 +44,6 @@
 					<hr>
 					<input type="submit" value="글 수정" formaction="update">
 					<input type="hidden" id="boardnum" name="boardnum" value="${board.boardnum}">
-					<input type="hidden" id="editnums" name="editnums" value="">
 					<input type="hidden" id="deletenums" name="deletenums" value="">
 				</c:when>
 				
@@ -63,4 +62,26 @@
 
 
 
-<!-- onclick="javascript:fileEditLog(${attachment.attachmentnum})"  -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
