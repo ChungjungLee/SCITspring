@@ -10,3 +10,7 @@ function validation() {
 	
 	return true;
 }
+
+function deleteAttach(attachmentnum) {
+	
+}

@@ -48,7 +48,7 @@
 					<c:out value="${board.content}" />
 				</div>
 				<c:if test="${attachmentList != null && attachmentListSize != 0}">
-					<div class="">
+					<div class="content-row">
 						<div class="col-header">
 							파일첨부
 						</div>

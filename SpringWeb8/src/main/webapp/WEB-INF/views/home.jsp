@@ -63,6 +63,7 @@
 					</c:otherwise>
 				</c:choose>
 				<li><a href="customer/test">test</a></li>
+				<li><a href="filetest">file upload test</a></li>
 			</ul>
 		</div>
 	</body>

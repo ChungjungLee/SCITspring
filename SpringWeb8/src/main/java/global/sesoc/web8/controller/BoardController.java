@@ -210,8 +210,12 @@ public class BoardController {
 			return "error";
 		}
 		
+		ArrayList<Attachment> attachmentList = attachmentDAO.readAll(boardnum);
+		
 		model.addAttribute("action", "update");
 		model.addAttribute("board", board);
+		model.addAttribute("attachmentList", attachmentList);
+		
 		return "boardPage/write";
 	}
 	
@@ -223,10 +227,17 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "update", method = RequestMethod.POST)
-	public String update(Board board, HttpSession session) {
+	public String update(Board board, MultipartFile[] uploads, HttpSession session) {
+		
+		logger.info("수정시 첨부파일 개수: {}", uploads.length);
+		for (MultipartFile upload : uploads) {
+			logger.info("filename: {}", upload.getOriginalFilename());
+		}
 		
 		String loginid = (String) session.getAttribute("loginid");
 		board.setId(loginid);
+		
+		
 		
 		int result = boardDAO.update(board);
 		
@@ -240,7 +251,7 @@ public class BoardController {
 	
 	// TODO: 게시글에 달려 있는 첨부파일 및 댓글을 지워줘야 하는지 확인 필요
 	/**
-	 * 게시글을 삭제한다
+	 * 게시글을 삭제한다, 달려 있는 첨부 파일은 스토리지에서 삭제
 	 * @param boardnum
 	 * @param session
 	 * @return
@@ -254,6 +265,12 @@ public class BoardController {
 		
 		if (board == null || !board.getId().equals(loginid)) {
 			return "error";
+		}
+		
+		// 파일 삭제
+		ArrayList<Attachment> list = attachmentDAO.readAll(boardnum);
+		for (Attachment attach : list) {
+			FileService.deleteFile(UPLOAD_PATH + "/" + attach.getSavedfile());
 		}
 		
 		int result = boardDAO.delete(boardnum);

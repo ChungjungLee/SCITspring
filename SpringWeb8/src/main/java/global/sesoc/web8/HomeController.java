@@ -21,6 +21,11 @@ public class HomeController {
 	
 	private static ArrayList<Long> primeList = new ArrayList<Long>();
 	
+	@RequestMapping (value="filetest", method = RequestMethod.GET)
+	public String filetest() {
+		return "filetest";
+	}
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request) {
 		logger.info("Welcome web8");

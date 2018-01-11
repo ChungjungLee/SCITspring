@@ -1,0 +1,15 @@
+@CHARSET "UTF-8";
+
+input.upload {  
+	opacity: 0;       /*input type="file" tag 투명하게 처리*/
+	width: 100px;
+	position: relative;
+}
+
+button.replace {    /*button tag 에 원하는 스타일 적용*/
+	position: absolute;
+	width: 100px;
+	border-radius: 3px;
+	border-color: transparent;
+	cursor: pointer;
+}
