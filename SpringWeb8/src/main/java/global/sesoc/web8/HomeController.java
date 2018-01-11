@@ -29,8 +29,8 @@ public class HomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(HttpServletRequest request) {
 		logger.info("Welcome web8");
-		logger.info("접속IP: {}", getClientIP(request));
-		//getEuler3();
+		//logger.info("접속IP: {}", getClientIP(request));
+		//System.out.println(getEuler4());
 		return "home";
 	}
 	
@@ -74,6 +74,17 @@ public class HomeController {
 		System.out.println("max: " + x);
 	}
 	
+	private int getEuler4() {
+		int result = 998001;
+		
+		for ( ; result > 0; result--) {
+			if (result % 11 == 0) {
+				return result;
+			}
+		}
+		
+		return result;
+	}
 	private boolean isPrime(long x) {
 		//primeList
 		for (Long i : primeList) {

@@ -18,7 +18,7 @@ import global.sesoc.web8.vo.Reply;
 public class ReplyController {
 	
 	@Autowired
-	ReplyDAO replyDAO;
+	private ReplyDAO replyDAO;
 	
 	Logger logger = LoggerFactory.getLogger(ReplyController.class);
 	

@@ -14,22 +14,38 @@
 	<body>
 		<h1>글쓰기 폼</h1>
 		
-		<form action="write" method="POST" onsubmit="return validation()" enctype="multipart/form-data">
+		<form action="write" method="POST" id="form" onsubmit="return validation()" enctype="multipart/form-data">
 			<c:choose>
 				
 				<c:when test="${action == 'update'}">
 					제목 <input type="text" id="title" name="title" value="${board.id}"> <br>
 					내용 <textarea rows="10" cols="50" id="content" name="content">${board.content}</textarea> <br>
 					파일 
+					
 					<c:forEach var="attachment" items="${attachmentList}">
-						${attachment.originalfile} 
-						<button class="replace">파일 변경</button>
-						<input type="file" name="uploads" class="upload"> 
-						<input type="button" value="삭제" onclick="javascript:deleteAttach(${attachment.attachmentnum})">
-						<br>
+						<div id="file_${attachment.attachmentnum}" class="file">
+							<input type="text" id="file_name_${attachment.attachmentnum}"
+									class="file_name" value="${attachment.originalfile}" readonly>
+						
+							<div class="file_input_div">
+								<input type="button" value="파일 변경" class="file_input_button" />
+								<input type="file" class="file_input_hidden" name="uploads"
+										onchange="javascript:fileEdit(${attachment.attachmentnum}, this.value)" />
+							</div>
+							
+							<input type="button" value="파일 삭제" onclick="javascript:fileDelete(${attachment.attachmentnum})">
+							<br>
+						</div>
+						
+						<input type="hidden" name="attachmentnums" value="${attachment.attachmentnum }">
 					</c:forEach>
-					<input type="submit" value="수정" formaction="update">
-					<input type="hidden" name="boardnum" value="${board.boardnum}">
+					<!-- <input type="button" value="파일 추가" onclick="javascript:fileAdd()"> -->
+					
+					<hr>
+					<input type="submit" value="글 수정" formaction="update">
+					<input type="hidden" id="boardnum" name="boardnum" value="${board.boardnum}">
+					<input type="hidden" id="editnums" name="editnums" value="">
+					<input type="hidden" id="deletenums" name="deletenums" value="">
 				</c:when>
 				
 				<c:otherwise>
@@ -44,3 +60,7 @@
 		</form>
 	</body>
 </html>
+
+
+
+<!-- onclick="javascript:fileEditLog(${attachment.attachmentnum})"  -->

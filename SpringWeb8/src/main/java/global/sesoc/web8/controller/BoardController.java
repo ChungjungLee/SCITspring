@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import global.sesoc.web8.dao.AttachmentDAO;
 import global.sesoc.web8.dao.BoardDAO;
 import global.sesoc.web8.dao.ReplyDAO;
+import global.sesoc.web8.service.BoardService;
 import global.sesoc.web8.util.FileService;
 import global.sesoc.web8.util.PageNavigator;
 import global.sesoc.web8.vo.Attachment;
@@ -35,11 +36,14 @@ import global.sesoc.web8.vo.Reply;
 public class BoardController {
 	
 	@Autowired
-	BoardDAO boardDAO;
+	private BoardService boardService;
+	
 	@Autowired
-	ReplyDAO replyDAO;
+	private BoardDAO boardDAO;
 	@Autowired
-	AttachmentDAO attachmentDAO;
+	private ReplyDAO replyDAO;
+	@Autowired
+	private AttachmentDAO attachmentDAO;
 	
 	Logger logger = LoggerFactory.getLogger(BoardController.class);
 	
@@ -65,7 +69,6 @@ public class BoardController {
 		 * value의 값에 맞는 사용자의 argument를 받아와서 해당 변수에 넣겠다
 		 * argument에서 찾지 못하면 defaultValue의 값을 넣는다
 		 */
-		logger.info("페이지: {} 검색 조건: {} 검색어: {}", currentPage, select, text);
 		
 		// 검색어를 가지고 해당 하는 게시글을 전부 읽어온다
 		// LIMIT 몇 개 만큼 가져올 것인지
@@ -115,16 +118,13 @@ public class BoardController {
 		int result = (Integer) resultMap.get("result");
 		
 		if (result != 1) {
-			logger.info("글쓰기 실패");
+			logger.debug("글쓰기 실패");
 			return "redirect:list?pagenum=1";
 		}
 		
 		/*
 		 * 첨부파일 처리
 		 */
-		logger.info("업로드 파일 개수: {}", uploads.length);
-		logger.info("입력된 게시글의 PK: {}", board.getBoardnum());
-		
 		if (uploads != null && uploads.length != 0) {
 			for (MultipartFile upload : uploads) {
 				// storage에 file 저장
@@ -138,12 +138,12 @@ public class BoardController {
 				// DB에 첨부파일 저장
 				int resultFile = attachmentDAO.write(attachment);
 				if (resultFile == 1) {
-					logger.info("첨부파일 업로드 완료");
+					logger.debug("첨부파일 업로드 완료");
 				} else {
 					if (FileService.deleteFile(UPLOAD_PATH + "/" + savedFile)) {
-						logger.info("파일 업로드 실패로 저장된 파일 삭제 성공");
+						logger.debug("파일 업로드 실패로 저장된 파일 삭제 성공");
 					} else {
-						logger.info("파일 업로드 실패로 저장된 파일 삭제 실패");
+						logger.debug("파일 업로드 실패로 저장된 파일 삭제 실패");
 					}
 				}
 			}
@@ -180,7 +180,6 @@ public class BoardController {
 		
 		// 글에 딸린 리플 읽어오기
 		ArrayList<Reply> replyList = replyDAO.readAll(boardnum);
-		logger.info("첨부파일의 개수: {}", attachmentList.size());
 		
 		model.addAttribute("board", board);
 		model.addAttribute("attachmentList", attachmentList);
@@ -227,17 +226,58 @@ public class BoardController {
 	 * @return
 	 */
 	@RequestMapping (value = "update", method = RequestMethod.POST)
-	public String update(Board board, MultipartFile[] uploads, HttpSession session) {
+	public String update(Board board, MultipartFile[] uploads, 
+			Integer[] deletenums, Integer[] attachmentnums, HttpSession session) {
+		
+		for (Integer i : attachmentnums) {
+			logger.info("첨부파일 번호: {}", i);
+		}
 		
 		logger.info("수정시 첨부파일 개수: {}", uploads.length);
 		for (MultipartFile upload : uploads) {
 			logger.info("filename: {}", upload.getOriginalFilename());
 		}
 		
+		
+		/* 첨부파일 삭제 */
+		if (deletenums != null) {
+			for (Integer deletenum : deletenums) {
+				Attachment toDelete = attachmentDAO.readOne(deletenum);
+				FileService.deleteFile(UPLOAD_PATH + "/" + toDelete.getSavedfile());
+				
+				if (attachmentDAO.delete(deletenum) != 1) {
+					logger.debug("첨부 파일 삭제 오류 발생");
+					return "redirect:update?boardnum=" + board.getBoardnum();
+				}
+			}
+		}
+		
+		/* 첨부파일 수정 */
+		for (int i = 0; i < uploads.length; i++) {
+			logger.info("수정하고자 하는 파일: {}", uploads[i].getOriginalFilename());
+			if (uploads[i].getSize() == 0) continue;
+			
+			
+			// 기존 첨부파일 삭제
+			Attachment toEdit = attachmentDAO.readOne(attachmentnums[i]);
+			FileService.deleteFile(UPLOAD_PATH + "/" + toEdit.getSavedfile());
+			
+			// 새로운 첨부파일 업로드
+			String newSavedfile = FileService.saveFile(uploads[i], UPLOAD_PATH);
+			
+			// DB 수정
+			toEdit.setOriginalfile(uploads[i].getOriginalFilename());
+			toEdit.setSavedfile(newSavedfile);
+			
+			if (attachmentDAO.update(toEdit) != 1) {
+				logger.debug("첨부 파일 수정 오류 발생");
+				return "redirect:update?boardnum=" + board.getBoardnum();
+			}
+		}
+		
+		/* 글 수정 */
 		String loginid = (String) session.getAttribute("loginid");
 		board.setId(loginid);
-		
-		
 		
 		int result = boardDAO.update(board);
 		
@@ -267,21 +307,21 @@ public class BoardController {
 			return "error";
 		}
 		
-		// 파일 삭제
+		/* storage에 저장된 파일 삭제 */
 		ArrayList<Attachment> list = attachmentDAO.readAll(boardnum);
 		for (Attachment attach : list) {
 			FileService.deleteFile(UPLOAD_PATH + "/" + attach.getSavedfile());
 		}
 		
+		/* 글 삭제 */
 		int result = boardDAO.delete(boardnum);
 		
 		if (result == 1) {
 			return "redirect:read?boardnum=" + boardnum;
 		} else {
-			logger.info("게시글 삭제 중 오류 발생");
+			logger.debug("게시글 삭제 중 오류 발생");
 			return "redirect:read?boardnum=" + boardnum;
 		}
-		
 	}
 	
 	/**
